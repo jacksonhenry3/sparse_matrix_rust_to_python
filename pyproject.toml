@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "sparse-matrix-rust-to-python"
+version = "0.0.0"
+description = "TODO"
+authors = ["Jackson Henry and Steven Kalt"]
+license = "TODO"
+readme = "README.md"
+packages = [{include = "sparse_matrix_rust_to_python"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.8.0"
+isort = "^5.10.1"
+mypy = "^0.971"
+flake8 = "^5.0.4"
+maturin = "^0.13.2"
+
+[build-system]
+# TODO: consider altering this to 
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
