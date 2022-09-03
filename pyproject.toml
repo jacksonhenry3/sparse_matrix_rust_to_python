@@ -8,7 +8,8 @@ readme = "README.md"
 packages = [{include = "sparse_matrix_rust_to_python"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.12"
+scipy = "^1.9.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.8.0"
@@ -16,6 +17,7 @@ isort = "^5.10.1"
 mypy = "^0.971"
 flake8 = "^5.0.4"
 maturin = "^0.13.2"
+numpy = "^1.23.2"
 
 [build-system]
 # TODO: consider altering this to 
