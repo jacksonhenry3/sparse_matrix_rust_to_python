@@ -1,8 +1,8 @@
 #[allow(dead_code)]
 
 use pyo3::{prelude::*, PyDowncastError};
-use pyo3::types::{PyDict,PyList,PyUnicode};
-use sprs::{CsMat};
+use pyo3::types::{PyDict,PyList,PyUnicode,PyTuple};
+use sprs::{CsMat, CsMatViewI};
 use numpy::{PyReadonlyArrayDyn};
 
 #[pyfunction]
@@ -24,19 +24,30 @@ fn handle_list(l: &PyList) -> usize {
 fn debug_print(p: &PyAny) -> Result<(), PyErr> {
 
 
-    let shape = p.getattr("shape")?;
-    let indptr = p.getattr("indptr")?;
-    let for_real:PyReadonlyArrayDyn<i32> = indptr.extract()?;
-    // let for_real = indptr.downcast::<PyReadonlyArrayDyn<i32>>()?;
-    let data = p.getattr("data")?;
-    let indices = p.getattr("indices")?;
-    println!("indptr={:?},\nfor_real={:?},\nindices={:?},\nshape={:?}", indptr, for_real, indices, shape);
-    // any.downcast::<SpecificPyType>()?;
-    // let sprs_mat = CsMat::new_csc(shape,
-    //                    indptr,
-    //                    indices,
-    //                    data);
+    let shape:&PyTuple = p.getattr("shape")?.extract()?;
+    let shape_tuple = (shape.get_item(0)?.extract::<usize>()?, shape.get_item(1)?.extract::<usize>()?);
+    println!("shape={:?}",shape_tuple);
 
+    let indptr:PyReadonlyArrayDyn<i32> = p.getattr("indptr")?.extract()?;
+    let indptr_array = indptr.as_slice()?;
+    println!("indptr_array={:?}",indptr_array);
+
+    let data:PyReadonlyArrayDyn<f64> = p.getattr("data")?.extract()?;
+    let data_array = data.as_slice()?;
+    println!("data_array={:?}",data_array);
+
+    let indices:PyReadonlyArrayDyn<i32> = p.getattr("indices")?.extract()?;
+    println!("indices={:?}", indices);
+    let indices_array = indices.as_slice()?;
+    println!("indices_array={:?}", indices_array);
+
+    let sprs_mat = CsMatViewI::new_csc(
+        shape_tuple,
+        indptr_array,
+        indices_array,
+        data_array,
+    );
+    println!("tada: {:?}", sprs_mat);
     return Ok(());
     // println!("{:?}", p.;
 }
